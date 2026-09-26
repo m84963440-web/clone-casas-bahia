@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Casas Bahia Premium</title>
+<!-- Tailwind CSS para o design -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- React e ReactDOM via CDN -->
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<!-- Babel para processar JSX no navegador -->
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+@keyframes slide-in { from { transform: translateX(-100%); } to { transform: translateX(0); } }
+@keyframes slide-right { from { transform: translateX(100%); } to { transform: translateX(0); } }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fade-in-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.animate-slide-in { animation: slide-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-slide-right { animation: slide-right 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-fade-in { animation: fade-in 0.3s ease-out forwards; }
+.animate-fade-in-up { animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+// Componente de Ícone para funcionar com Lucide via CDN
+const Icon = ({ name, size = 24, className = "" }) => {
+useEffect(() => {
+lucide.createIcons();
+}, []);
+return <i data-lucide={name} style={{ width: size, height: size }} className={className}></i>;
+};
+
+const CasasBahiaPremium = () => {
+const [isMenuOpen, setIsMenuOpen] = useState(false);
+const [activeBanner, setActiveBanner] = useState(0);
+const [cart, setCart] = useState([]);
+const [isCartOpen, setIsCartOpen] = useState(false);
+const [searchQuery, setSearchQuery] = useState('');
+const [isLoaded, setIsLoaded] = useState(false);
+
+useEffect(() => {
+setIsLoaded(true);
+const timer = setInterval(() => {
+setActiveBanner((prev) => (prev + 1) % banners.length);
+}, 6000);
+return () => clearInterval(timer);
+}, []);
+
+const banners = [
+{ id: 1, title: "Semanas do Smartphone", subtitle: "iPhone e Samsung com preços de custo e frete grátis", image: "https://images.pexels.com/photos/16888144/pexels-photo-16888144.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", color: "from-red-600 to-red-800", cta: "Aproveitar Agora" },
+{ id: 2, title: "Eletro Premium", subtitle: "Geladeiras e Lavadoras com até 12x sem juros", image: "https://images.pexels.com/photos/19599329/pexels-photo-19599329.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", color: "from-blue-600 to-blue-800", cta: "Ver Ofertas" },
+{ id: 3, title: "Mundo Gamer", subtitle: "PS5, Xbox e Notebooks Gamer em oferta", image: "https://images.pexels.com/photos/12019611/pexels-photo-12019611.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", color: "from-purple-600 to-indigo-800", cta: "Equipar meu Setup" }
+];
+
+const categories = [
+{ name: "Smartphones", icon: "smartphone", img: "https://images.pexels.com/photos/16888144/pexels-photo-16888144.jpeg?auto=compress&cs=tinysrgb&w=150" },
+{ name: "TVs e Vídeo", icon: "tv", img: "https://images.pexels.com/photos/15259088/pexels-photo-15259088.jpeg?auto=compress&cs=tinysrgb&w=150" },
+{ name: "Geladeiras", icon: "refrigerator", img: "https://images.pexels.com/photos/8082207/pexels-photo-8082207.jpeg?auto=compress&cs=tinysrgb&w=150" },
+{ name: "Lavadoras", icon: "washing-machine", img: "https://images.pexels.com/photos/33686459/pexels-photo-33686459.jpeg?auto=compress&cs=tinysrgb&w=150" },
+{ name: "Games", icon: "gamepad-2", img: "https://images.pexels.com/photos/12019611/pexels-photo-12019611.jpeg?auto=compress&cs=tinysrgb&w=150" },
+{ name: "Eletroportáteis", icon: "search", img: "https://images.pexels.com/photos/19599329/pexels-photo-19599329.jpeg?auto=compress&cs=tinysrgb&w=150" },
+];
+
+const products = [
+{ id: 1, name: "iPhone 15 Pro Max 256GB Titânio", price: 7499.00, oldPrice: 8900.00, rating: 4.9, reviews: 1240, image: "https://images.pexels.com/photos/16888144/pexels-photo-16888144.jpeg?auto=compress&cs=tinysrgb&w=400", tag: "Oferta Relâmpago", discount: "16%" },
+{ id: 2, name: "Smart TV LG OLED Evo 65\" 4K", price: 5899.00, oldPrice: 7200.00, rating: 4.8, reviews: 890, image: "https://images.pexels.com/photos/15259088/pexels-photo-15259088.jpeg?auto=compress&cs=tinysrgb&w=400", tag: "Mais Vendido", discount: "18%" },
+{ id: 3, name: "Geladeira Samsung Bespoke Inox", price: 4200.00, oldPrice: 5100.00, rating: 4.7, reviews: 450, image: "https://images.pexels.com/photos/8082207/pexels-photo-8082207.jpeg?auto=compress&cs=tinysrgb&w=400", tag: "Frete Grátis", discount: "17%" },
+{ id: 4, name: "PlayStation 5 Slim + God of War", price: 3899.00, oldPrice: 4400.00, rating: 5.0, reviews: 2100, image: "https://images.pexels.com/photos/12019611/pexels-photo-12019611.jpeg?auto=compress&cs=tinysrgb&w=400", tag: "Estoque Limitado", discount: "11%" },
+{ id: 5, name: "Lava e Seca LG AI DD 11kg", price: 4100.00, oldPrice: 4900.00, rating: 4.6, reviews: 320, image: "https://images.pexels.com/photos/33686459/pexels-photo-33686459.jpeg?auto=compress&cs=tinysrgb&w=400", tag: "Melhor Preço", discount: "16%" },
+{ id: 6, name: "Air Fryer Philips Walita Digital", price: 849.00, oldPrice: 1100.00, rating: 4.4, reviews: 1500, image: "https://images.pexels.com/photos/19599329/pexels-photo-19599329.jpeg?auto=compress&cs=tinysrgb&w=400", tag: "Essencial", discount: "22%" },
+];
+
+const addToCart = (product) => {
+setCart(prev => {
+const exists = prev.find(item => item.id === product.id);
+if (exists) return prev.map(item => item.id === product.id? {...item, qty: item.qty + 1 }: item);
+return [...prev, {...product, qty: 1 }];
+});
+setIsCartOpen(true);
+};
+
+const updateQty = (id, delta) => {
+setCart(prev => prev.map(item => item.id === id? {...item, qty: Math.max(1, item.qty + delta) }: item));
+};
+
+const removeItem = (id) => setCart(prev => prev.filter(item => item.id!== id));
+const cartTotal = cart.reduce((acc, item) => acc + (item.price  item.qty), 0);
+
+return (
+<div className={`min-h-screen bg-[#F5F7FA] font-sans text-slate-900 transition-opacity duration-700 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
+<div className="bg-[#003399] text-white text-[11px] py-2 px-4 flex justify-between items-center font-medium">
+<div className="flex gap-4 overflow-x-auto whitespace-nowrap no-scrollbar">
+<span className="flex items-center gap-1.5 opacity-90 hover:opacity-100 cursor-pointer transition-all"><Icon name="truck" size={13} /> Frete Grátis para capitais</span>
+<span className="hidden md:flex items-center gap-1.5 opacity-90 hover:opacity-100 cursor-pointer transition-all"><Icon name="credit-card" size={13} /> Até 24x no Cartão Casas Bahia</span>
+<span className="flex items-center gap-1.5 opacity-90 hover:opacity-100 cursor-pointer transition-all"><Icon name="shield-check" size={13} /> Compra 100% Segura</span>
+</div>
+<div className="hidden sm:flex gap-4">
+<span className="cursor-pointer hover:underline">Ajuda</span>
+<span className="cursor-pointer hover:underline">Meus Pedidos</span>
+</div>
+</div>
+
+<header className="bg-white sticky top-0 z-50 shadow-sm border-b border-gray-100 backdrop-blur-md bg-white/90">
+<div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-4 md:gap-8">
+<div className="flex items-center gap-3">
+<button onClick={() => setIsMenuOpen(true)} className="p-2 hover:bg-gray-100 rounded-xl transition-all active:scale-90">
+<Icon name="menu" size={26} className="text-[#003399]" />
+</button>
+<div className="text-2xl font-black text-red-600 tracking-tighter cursor-pointer select-none">
+CASAS <span className="text-[#003399]">BAHIA</span>
+</div>
+</div>
+<div className="flex-1 relative group">
+<input type="text" placeholder="Busque por produtos, marcas ou categorias..." className="w-full bg-gray-100 border-transparent rounded-2xl py-2.5 px-5 pr-12 focus:outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all text-sm" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+<button className="absolute right-1 top-1 bottom-1 px-4 bg-[#003399] text-white rounded-xl hover:bg-blue-700 transition-all active:scale-95">
+<Icon name="search" size={18} />
+</button>
+</div>
+<div className="hidden md:flex items-center gap-5">
+<div className="flex items-center gap-2 cursor-pointer group transition-all">
+<div className="p-2 bg-gray-100 rounded-full group-hover:bg-blue-100 transition-colors">
+<Icon name="user" size={22} className="text-[#003399]" />
+</div>
+<div className="text-[11px] leading-tight">
+<p className="text-gray-400">Olá, entre ou</p>
+<p className="font-bold text-slate-700">Crie sua conta</p>
+</div>
+</div>
+<button onClick={() => setIsCartOpen(true)} className="relative p-2 bg-gray-100 rounded-full hover:bg-blue-100 transition-all active:scale-90">
+<Icon name="shopping-cart" size={24} className="text-[#003399]" />
+{cart.length > 0 && <span className="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-white animate-bounce">{cart.reduce((a, b) => a + b.qty, 0)}</span>}
+</button>
+</div>
+</div>
+</header>
+
+{isMenuOpen && (
+<div className="fixed inset-0 z- bg-black/60 backdrop-blur-sm animate-fade-in">
+<div className="w-full max-w-xs h-full bg-white shadow-2xl animate-slide-in">
+<div className="p-5 border-b flex justify-between items-center bg-gradient-to-r from-[#003399] to-blue-700 text-white">
+<span className="font-bold text-lg">Menu Principal</span>
+<button onClick={() => setIsMenuOpen(false)} className="p-2 hover:bg-white/20 rounded-full transition-colors"><Icon name="x" size={24} /></button>
+</div>
+<div className="overflow-y-auto h-full pb-20">
+<div className="p-4 bg-gray-50 border-b">
+<div className="flex items-center gap-3 p-3 bg-white rounded-xl shadow-sm border border-gray-100 cursor-pointer">
+<Icon name="user" size={20} className="text-blue-600" />
+<span className="font-semibold text-sm">Minha Conta</span>
+</div>
+</div>
+{categories.map((cat, i) => (
+<div key={i} className="flex items-center gap-4 p-4 hover:bg-blue-50 cursor-pointer border-b border-gray-50 transition-all group">
+<div className="p-2 bg-gray-100 rounded-lg text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all"><Icon name={cat.icon} /></div>
+<span className="font-medium text-slate-700 group-hover:text-blue-700">{cat.name}</span>
+<Icon name="chevron-right" size={16} className="ml-auto text-gray-300 group-hover:text-blue-400" />
+</div>
+))}
+</div>
+</div>
+</div>
+)}
+
+{isCartOpen && (
+<div className="fixed inset-0 z- bg-black/60 backdrop-blur-sm animate-fade-in">
+<div className="absolute right-0 top-0 w-full max-w-md h-full bg-white shadow-2xl animate-slide-right flex flex-col">
+<div className="p-5 border-b flex justify-between items-center bg-gray-50">
+<div className="flex items-center gap-2 font-bold text-xl text-slate-800">
+<Icon name="shopping-cart" size={24} className="text-blue
+
+⚠️ A conexão foi interrompida antes de eu concluir a resposta. Tente novamente.
